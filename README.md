@@ -9,8 +9,8 @@ The official pytorch implementation of the paper [LAVA: Label-efficient Visual L
 LAVA is a transfer learning method combining self-supervised vision transformers, multi-crop pseudo-labeling, and weak supervision using language to enable transfer with limited labels to different visual domains. It provides a training recipe which achieves state-of-the-art results in semi-supervised transfer and few-shot cross-domain transfer. 
 In what follows, we detail: 
 - [Installing LAVA dependencies](https://github.com/islam-nassar/lava/blob/main/README.md#install-dependencies)
-- [Running LAVA in semi-supervised settings.] (https://github.com/islam-nassar/lava/blob/main/README.md#semi-supervised-learning-ssl)
-- [Running LAVA in few-shot settings.] (https://github.com/islam-nassar/lava/blob/main/README.md#few-shot-learning-fsl)
+- [Running LAVA in semi-supervised settings.](https://github.com/islam-nassar/lava/blob/main/README.md#semi-supervised-learning-ssl)
+- [Running LAVA in few-shot settings.](https://github.com/islam-nassar/lava/blob/main/README.md#few-shot-learning-fsl)
 
 ## Install Dependencies
 
@@ -85,19 +85,40 @@ Finally, in the third stage, LAVA fine-tunes the target self-supervised pretrain
 ```
 ./scripts/lava_ssl_3_target_semisup_finetune.sh
 ```
-You must edit the header of the above script to reflect the target dataset directory and the source pretrained weights. Refer to our example which uses imagenet source and domain_net clipart as target.
-### SSL validation
+You must edit the header of the above script to reflect the target dataset directory and the pretrained weights. Refer to our example which uses imagenet finetuned on clipart pretrained weights and adapt to domain_net clipart with 4-shots (i.e. 4 images per class).
+### SSL evaluation
+To evaluate LAVA, you can use eval_linear.py or eval_knn.py which is the standalone versions of eval_or_predict_linear.py and eval_or_predict_knn.py
+
 
 ## Few-shot Learning (FSL)
 ### FSL Dataset preparation
-Follow meta-dataset to download and preprocess the meta-dataset (10 datasets)
-Set env variables 
+Follow meta-dataset repo to [download and preprocess the meta-dataset (10 datasets)](https://github.com/google-research/meta-dataset#downloading-and-converting-datasets). You shall end up with a directory which contains two subdirectories `RECORDS` and `SPLITS`. (e.g. /home/data/meta_dataset)
+
+Set the following environment variable:
+```
+export METADATASET_ROOT=/home/data/meta_dataset
+```
 
 ### FSL source pretraining
+For source self-supervised pretraining in case of few-shot learning, we provide the following script which trains LAVA on ImageNet meta-dataset train classes (716 classes out of the 1000):
+```
+./scripts/lava_fsl_1_source_self_pretrain.sh
+```
 
+### FSL source language pretraining
+Subsequently, you train the language adapter MLP while freezing LAVA's backbone model by running:
+```
+./scripts/lava_fsl_2_source_language_pretrain.sh
+```
 ### FSL target training and evaluation (FSL episodes)
-For FSL, we encapsulate training and evaluation using `few_shot_runner.py`. You only need to specify the dataset and the number of episodes, then our launcher will take care of the rest. For example, if you need to run 600 few-shot episodes on `textures`, run:
+Finally, to evaluate LAVA on FSL meta-dataset episodes, we encapsulate training and evaluation using `few_shot_runner.py`. You only need to specify the dataset and the number of episodes, then our launcher will take care of the rest. We provide an example which runs 600 few-shot episodes on `mscoco` dataset:
+```
+./scripts/lava_fsl_3_target_finetune_episodes.sh
+```
 
+You can adjust the above script header to include any of the meta-datasets below and any number of episodes.
+
+We provide pretrained weights on ImageNet 716 classes and the language MLP module here.
 
 meta datasets: 'aircraft', 'cu_birds', 'dtd', 'fungi', 'ilsvrc_2012', 'omniglot', 'quickdraw', 'vgg_flower', 'traffic_sign', 'mscoco'
 
