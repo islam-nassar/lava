@@ -6,22 +6,22 @@ The official pytorch implementation of the paper [LAVA: Label-efficient Visual L
 </p>
 
 ## Overview
-LAVA is a transfer learning method combining self-supervised vision transformers, multi-crop pseudo-labeling, and weak supervision using language to enable transfer with limited labels to different visual domains. It provides a training recipe which achieves state-of-the-art results in semi-supervised transfer and few-shot cross-domain transfer. 
+LAVA is a transfer learning method combining self-supervised vision transformers, multi-crop pseudo-labeling, and weak supervision using language to enable transfer with limited labels to different visual domains. It provides a training recipe which achieves state-of-the-art results in semi-supervised transfer and few-shot cross-domain transfer. In what follows, we first, detail how to install LAVA dependencies, then we detail both semi-supervised and few-shot settings. 
 
 ## Install Dependencies
 
-- Create a new environment and install dependencies using ```pip install -r requirements.txt``` 
+- Create a new environment and install LAVA dependencies using ```pip install -r requirements.txt``` 
 - For running Few-shot experiments, you also need to install the meta-dataset dependencies as per their [installation instructions](https://github.com/google-research/meta-dataset#installation).  
 
-## Semi-supervised Learning
+## Semi-supervised Learning (SSL)
 Our SSL transfer learning setup includes: 
 1) self-supervised pretraining on the source dataset
 2) self-supervised fine-tuning on the target dataset
 3) supervised fine-tuning on the target dataset
 
-First, we discuss how to prepare the datasets then we detail how to run LAVA for each of the three stages.
+First, we discuss how to prepare the SSL datasets then we detail how to run LAVA for each of the three stages.
 
-## SSL Dataset preparation
+### SSL Dataset preparation
 We use a standard directory structure for all our datasets (source and target) to enable running experiments on any dataset of choice without the need to edit the dataloaders. The datasets directory follow the below structure (only shown for ImageNet but is the same for all other datasets):
 ```
 datasets
@@ -52,10 +52,28 @@ datasets
              │   ...
        └───egyptian_cat
              │   <egyptian_cat_val_1>.jpeg
-             │   <egyptian_cat_val_1>.jpeg
+             │   <egyptian_cat_val_2>.jpeg
              │   ...
            ...
 ```
+To preprocess a generic dataset into the above format, you can refer to `utils/data_utils.py` for several examples.
+
+### SSL training (stage 1 - source self-supervised pretraining)
+### SSL training (stage 2 - target self-supervised fine-tuning)
+### SSL training (stage 3 - target supervised fine-tuning)
+### SSL Validation
+
+## Few-shot Learning (FSL)
+### FSL Dataset preparation
+Follow meta-dataset to download and preprocess the meta-dataset (10 datasets)
+Set env variables 
+
+### FSL training and evaluation
+For FSL, we encapsulate training and evaluation using `few_shot_runner.py`. You only need to specify the dataset and the number of episodes, then our launcher will take care of the rest. For example, if you need to run 600 few-shot episodes on `textures`, run:
+
+
+
+
 
 ## Citation
 
@@ -69,9 +87,3 @@ If you find our work useful, please consider giving a star and citing our work u
   year={2022}
 }
 ```
-
-
-
-To preprocess a generic dataset into the above format, you can refer to `utils/data_utils.py` for several examples.
-
-To configure the datasets directory path, you can either set the environment variable `SEMCO_DATA_PATH` or pass a command line argument `--dataset-path` to the launcher. (e.g. `export SEMCO_DATA_PATH=/home/data`). Note that this path references the parent datasets directory which contains the different sub directories for the individual datasets (e.g. cifar100, mini-imagenet, etc.)
