@@ -39,7 +39,7 @@ datasets
            ...
            
        └───unlabelled
-           └───UNKNOWN_CLASS (this directory can be empty if all the labels are used, i.e. in a fully supervised setting)
+           └───UNKNOWN_CLASS (this directory can be empty if all the labels are used, e.g. fully supervised setting)
              │   <australian_terrier_train_xx>.jpeg
              │   <egyptian_cat_train_xx>.jpeg
              │   <badger_train_xx>.jpeg
@@ -54,7 +54,8 @@ datasets
              │   <egyptian_cat_val_1>.jpeg
              │   <egyptian_cat_val_2>.jpeg
              │   ...
-           ...
+       ...
+...
 ```
 To preprocess a generic dataset into the above format, you can refer to `utils/data_utils.py` for several examples.
 
@@ -68,7 +69,9 @@ To preprocess a generic dataset into the above format, you can refer to `utils/d
 Follow meta-dataset to download and preprocess the meta-dataset (10 datasets)
 Set env variables 
 
-### FSL training and evaluation
+### FSL source pretraining
+
+### FSL target training and evaluation (FSL episodes)
 For FSL, we encapsulate training and evaluation using `few_shot_runner.py`. You only need to specify the dataset and the number of episodes, then our launcher will take care of the rest. For example, if you need to run 600 few-shot episodes on `textures`, run:
 
 
