@@ -6,7 +6,11 @@ The official pytorch implementation of the paper [LAVA: Label-efficient Visual L
 </p>
 
 ## Overview
-LAVA is a transfer learning method combining self-supervised vision transformers, multi-crop pseudo-labeling, and weak supervision using language to enable transfer with limited labels to different visual domains. It provides a training recipe which achieves state-of-the-art results in semi-supervised transfer and few-shot cross-domain transfer. In what follows, we first, detail how to install LAVA dependencies, then we detail both semi-supervised and few-shot settings. 
+LAVA is a transfer learning method combining self-supervised vision transformers, multi-crop pseudo-labeling, and weak supervision using language to enable transfer with limited labels to different visual domains. It provides a training recipe which achieves state-of-the-art results in semi-supervised transfer and few-shot cross-domain transfer. 
+In what follows, we detail: 
+- [Installing LAVA dependencies]()
+- [Running LAVA in semi-supervised settings.] ()
+- [Running LAVA in few-shot settings.] ()
 
 ## Install Dependencies
 
@@ -17,7 +21,7 @@ LAVA is a transfer learning method combining self-supervised vision transformers
 Our SSL transfer learning setup includes: 
 1) self-supervised pretraining on the source dataset
 2) self-supervised fine-tuning on the target dataset
-3) supervised fine-tuning on the target dataset
+3) semi-supervised fine-tuning on the target dataset
 
 First, we discuss how to prepare the SSL datasets then we detail how to run LAVA for each of the three stages.
 
@@ -60,15 +64,29 @@ datasets
 To preprocess a generic dataset into the above format, you can refer to `utils/data_utils.py` for several examples.
 
 ### SSL training (stage 1 - source self-supervised pretraining)
-LAVA uses DINO method for self-supervised pretraining, hence, one can use the pretrained models provided by DINO or alternatively, can pretrain a new model using the provided script:
+LAVA uses DINO method for self-supervised pretraining. Hence, one can use the pretrained models provided by [DINO](https://github.com/facebookresearch/dino#pretrained-models) or alternatively, can pretrain a new model using the provided script:
 
 ```
 ./scripts/lava_ssl_1_source_self_pretrain.sh
 ```
+Notes:
+- If you are to use a [pretrained DINO model](https://github.com/facebookresearch/dino#pretrained-models), make sure to use the full ckpt (full checkpoint) and not just the backbone because our method uses the head during target self-supervised fine-tuning.
+- You can pretrain your own DINO model using LAVA's repo by invoking the above script. You should edit the header of the script to reflect your source dataset (we use ImageNet but you can use any dataset of your choice as long as it is in the described format)
 
 ### SSL training (stage 2 - target self-supervised fine-tuning)
+In the second stage, LAVA fine-tune the source self-supervised pretrained model to the unlabeled instances of the target dataset. You can achieve this by running:
+```
+./scripts/lava_ssl_2_target_self_finetune.sh
+```
+You must edit the header of the above script to reflect the target dataset directory and the source pretrained weights. Refer to our example which uses imagenet source and domain_net clipart as target.
+
 ### SSL training (stage 3 - target supervised fine-tuning)
-### SSL Validation
+Finally, in the third stage, LAVA fine-tunes the target self-supervised pretrained model to the labeled and unlabeled instances of the target dataset by employing supervised fine-tuning and multi-crop pseudo-labeling. You can achieve this by running:
+```
+./scripts/lava_ssl_3_target_semisup_finetune.sh
+```
+You must edit the header of the above script to reflect the target dataset directory and the source pretrained weights. Refer to our example which uses imagenet source and domain_net clipart as target.
+### SSL validation
 
 ## Few-shot Learning (FSL)
 ### FSL Dataset preparation
