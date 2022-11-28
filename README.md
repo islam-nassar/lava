@@ -5,6 +5,58 @@ The official pytorch implementation of the paper [LAVA: Label-efficient Visual L
   <img class="center" src="https://github.com/islam-nassar/lava/blob/main/aux/LAVA_teaser.png" alt="LAVA Conceptual Diagram" width="500">
 </p>
 
+## Overview
+LAVA is a transfer learning method combining self-supervised vision transformers, multi-crop pseudo-labeling, and weak supervision using language to enable transfer with limited labels to different visual domains. It provides a training recipe which achieves state-of-the-art results in semi-supervised transfer and few-shot cross-domain transfer. 
+
+## Install Dependencies
+
+- Create a new environment and install dependencies using ```pip install -r requirements.txt``` 
+- For running Few-shot experiments, you also need to install the meta-dataset dependencies as per their [installation instructions](https://github.com/google-research/meta-dataset#installation).  
+
+## Semi-supervised Learning
+Our SSL transfer learning setup includes: 
+1) self-supervised pretraining on the source dataset
+2) self-supervised fine-tuning on the target dataset
+3) supervised fine-tuning on the target dataset
+
+First, we discuss how to prepare the datasets then we detail how to run LAVA for each of the three stages.
+
+## SSL Dataset preparation
+We use a standard directory structure for all our datasets (source and target) to enable running experiments on any dataset of choice without the need to edit the dataloaders. The datasets directory follow the below structure (only shown for ImageNet but is the same for all other datasets):
+```
+datasets
+└───ImageNet
+   └───train
+       └───labelled
+           └───australian_terrier (class name for Imagenet can also be represented by its wordnet id e.g.: n02096294)  
+             │   <australian_terrier_train_1>.jpeg
+             │   <australian_terrier_train_2>.jpeg
+             │   ...
+           └───egyptian_cat (or n02124075)
+             │   <egyptian_cat_train_1>.jpeg
+             │   <egyptian_cat_train_2>.jpeg
+             │   ...
+           ...
+           
+       └───unlabelled
+           └───UNKNOWN_CLASS (this directory can be empty if all the labels are used, i.e. in a fully supervised setting)
+             │   <australian_terrier_train_xx>.jpeg
+             │   <egyptian_cat_train_xx>.jpeg
+             │   <badger_train_xx>.jpeg
+             │   ...
+             
+   └───val
+       └───australian_terrier
+             │   <australian_terrier_val_1>.jpeg
+             │   <australian_terrier_val_2>.jpeg
+             │   ...
+       └───egyptian_cat
+             │   <egyptian_cat_val_1>.jpeg
+             │   <egyptian_cat_val_1>.jpeg
+             │   ...
+           ...
+```
+
 ## Citation
 
 If you find our work useful, please consider giving a star and citing our work using below:
@@ -18,44 +70,7 @@ If you find our work useful, please consider giving a star and citing our work u
 }
 ```
 
-## Install Dependencies
 
-- Create a new environment and install dependencies using ```pip install -r requirements.txt``` 
-
-
-## Dataset
-We use a standard directory structure for all our datasets to enable running the code on any dataset of choice without the need to edit the dataloaders. The datasets directory follow the below structure (only shown for cifar100 but is the same for all other datasets):
-```
-datasets
-└───cifar100
-   └───train
-       └───labelled
-           └───apple
-             │   <img1>.png
-             │   <img2>.png
-             │   ...
-           └───aquarium_fish
-             │   <img1>.png
-             │   <img2>.png
-             │   ...
-           ...
-           
-       └───unlabelled
-           └───UNKNOWN_CLASS
-             │   <img1>.png
-             │   <img2>.png
-             │   <img3>.png
-   └───val
-       └───apple
-             │   <img1>.png
-             │   <img2>.png
-             │   ...
-       └───aquarium_fish
-             │   <img1>.png
-             │   <img1>.png
-             │   ...
-           ...
-```
 
 To preprocess a generic dataset into the above format, you can refer to `utils/data_utils.py` for several examples.
 
