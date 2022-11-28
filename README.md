@@ -2,7 +2,7 @@
 The official pytorch implementation of the paper [LAVA: Label-efficient Visual Learning and Adaptation](https://arxiv.org/abs/2210.10317) (appearing in WACV2023)
 
 <p align="center">
-  <img class="center" src="https://github.com/islam-nassar/semco/blob/main/conceptual.png/" alt="SemCo Conceptual Diagram" width="500">
+  <img class="center" src="https://github.com/islam-nassar/lava/blob/main/LAVA_teaser.pdf" alt="SemCo Conceptual Diagram" width="500">
 </p>
 
 ## Citation
