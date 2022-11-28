@@ -60,6 +60,12 @@ datasets
 To preprocess a generic dataset into the above format, you can refer to `utils/data_utils.py` for several examples.
 
 ### SSL training (stage 1 - source self-supervised pretraining)
+LAVA uses DINO method for self-supervised pretraining, hence, one can use the pretrained models provided by DINO or alternatively, can pretrain a new model using the provided script:
+
+```
+./scripts/lava_ssl_1_source_self_pretrain.sh
+```
+
 ### SSL training (stage 2 - target self-supervised fine-tuning)
 ### SSL training (stage 3 - target supervised fine-tuning)
 ### SSL Validation
@@ -73,6 +79,9 @@ Set env variables
 
 ### FSL target training and evaluation (FSL episodes)
 For FSL, we encapsulate training and evaluation using `few_shot_runner.py`. You only need to specify the dataset and the number of episodes, then our launcher will take care of the rest. For example, if you need to run 600 few-shot episodes on `textures`, run:
+
+
+meta datasets: 'aircraft', 'cu_birds', 'dtd', 'fungi', 'ilsvrc_2012', 'omniglot', 'quickdraw', 'vgg_flower', 'traffic_sign', 'mscoco'
 
 
 
