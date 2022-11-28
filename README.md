@@ -8,9 +8,9 @@ The official pytorch implementation of the paper [LAVA: Label-efficient Visual L
 ## Overview
 LAVA is a transfer learning method combining self-supervised vision transformers, multi-crop pseudo-labeling, and weak supervision using language to enable transfer with limited labels to different visual domains. It provides a training recipe which achieves state-of-the-art results in semi-supervised transfer and few-shot cross-domain transfer. 
 In what follows, we detail: 
-- [Installing LAVA dependencies]()
-- [Running LAVA in semi-supervised settings.] ()
-- [Running LAVA in few-shot settings.] ()
+- [Installing LAVA dependencies](https://github.com/islam-nassar/lava/blob/main/README.md#install-dependencies)
+- [Running LAVA in semi-supervised settings.] (https://github.com/islam-nassar/lava/blob/main/README.md#semi-supervised-learning-ssl)
+- [Running LAVA in few-shot settings.] (https://github.com/islam-nassar/lava/blob/main/README.md#few-shot-learning-fsl)
 
 ## Install Dependencies
 
