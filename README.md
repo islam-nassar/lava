@@ -1,5 +1,5 @@
 # LAVA
-The official pytorch implementation of the paper [LAVA: Label-efficient Visual Learning and Adaptation](https://arxiv.org/abs/2210.10317) (appearing in WACV2023)
+The pytorch implementation of the paper [LAVA: Label-efficient Visual Learning and Adaptation](https://arxiv.org/abs/2210.10317) (appearing in WACV2023)
 
 <p align="center">
   <img class="center" src="https://github.com/islam-nassar/lava/blob/main/aux/LAVA_teaser.png" alt="LAVA Conceptual Diagram" width="500">
@@ -9,16 +9,16 @@ The official pytorch implementation of the paper [LAVA: Label-efficient Visual L
 LAVA is a transfer learning method combining self-supervised vision transformers, multi-crop pseudo-labeling, and weak supervision using language to enable transfer with limited labels to different visual domains. It provides a training recipe which achieves state-of-the-art results in semi-supervised transfer and few-shot cross-domain transfer. 
 In what follows, we detail: 
 - [Installing LAVA dependencies](https://github.com/islam-nassar/lava/blob/main/README.md#install-dependencies)
-- [Running LAVA in semi-supervised settings.](https://github.com/islam-nassar/lava/blob/main/README.md#semi-supervised-learning-ssl)
-- [Running LAVA in few-shot settings.](https://github.com/islam-nassar/lava/blob/main/README.md#few-shot-learning-fsl)
+- [LAVA for Semi-supervised Learning](https://github.com/islam-nassar/lava/blob/main/README.md#semi-supervised-learning-ssl)
+- [LAVA for Few-shot Learning](https://github.com/islam-nassar/lava/blob/main/README.md#few-shot-learning-fsl)
 
 ## Install Dependencies
 
 - Create a new environment and install LAVA dependencies using ```pip install -r requirements.txt``` 
 - For running Few-shot experiments, you also need to install the meta-dataset dependencies as per their [installation instructions](https://github.com/google-research/meta-dataset#installation).  
 
-## Semi-supervised Learning (SSL)
-Our SSL transfer learning setup includes: 
+## LAVA for Semi-supervised Learning (SSL)
+Our SSL transfer learning procedure includes: 
 1) self-supervised pretraining on the source dataset
 2) self-supervised fine-tuning on the target dataset
 3) semi-supervised fine-tuning on the target dataset
@@ -61,7 +61,7 @@ datasets
        ...
 ...
 ```
-To preprocess a generic dataset into the above format, you can refer to `utils/data_utils.py` for several examples.
+To preprocess a generic dataset into the above format, you can refer to `data_utils.py` for several examples. (coming soon)
 
 ### SSL training (stage 1 - source self-supervised pretraining)
 LAVA uses DINO method for self-supervised pretraining. Hence, one can use the pretrained models provided by [DINO](https://github.com/facebookresearch/dino#pretrained-models) or alternatively, can pretrain a new model using the provided script:
@@ -72,6 +72,8 @@ LAVA uses DINO method for self-supervised pretraining. Hence, one can use the pr
 Notes:
 - If you are to use a [pretrained DINO model](https://github.com/facebookresearch/dino#pretrained-models), make sure to use the full ckpt (full checkpoint) and not just the backbone because our method uses the head during target self-supervised fine-tuning.
 - You can pretrain your own DINO model using LAVA's repo by invoking the above script. You should edit the header of the script to reflect your source dataset (we use ImageNet but you can use any dataset of your choice as long as it is in the described format)
+
+The pretrained model we used in all our SSL experiments can be found here. ([]())
 
 ### SSL training (stage 2 - target self-supervised fine-tuning)
 In the second stage, LAVA fine-tune the source self-supervised pretrained model to the unlabeled instances of the target dataset. You can achieve this by running:
@@ -90,7 +92,14 @@ You must edit the header of the above script to reflect the target dataset direc
 To evaluate LAVA, you can use eval_linear.py or eval_knn.py which is the standalone versions of eval_or_predict_linear.py and eval_or_predict_knn.py
 
 
-## Few-shot Learning (FSL)
+## LAVA for Few-shot Learning (FSL)
+Our FSL transfer learning procedure includes: 
+1) self-supervised pretraining on the source dataset (We use ImageNet train split from meta-dataset)
+2) Language module pretraining on the source dataset
+3) FSL episodes - semi-supervised fine-tuning on the support set and evaluation on query set.
+
+First, we discuss how to prepare the meta-dataset then we detail how to run LAVA for each of the three stages.
+
 ### FSL Dataset preparation
 Follow meta-dataset repo to [download and preprocess the meta-dataset (10 datasets)](https://github.com/google-research/meta-dataset#downloading-and-converting-datasets). You shall end up with a directory which contains two subdirectories `RECORDS` and `SPLITS`. (e.g. /home/data/meta_dataset)
 
@@ -110,19 +119,18 @@ Subsequently, you train the language adapter MLP while freezing LAVA's backbone 
 ```
 ./scripts/lava_fsl_2_source_language_pretrain.sh
 ```
+
+The pretrained model we used in all our FSL experiments can be found here. ([We provide pretrained weights on ImageNet 716 classes and the language MLP module]())
+
 ### FSL target training and evaluation (FSL episodes)
-Finally, to evaluate LAVA on FSL meta-dataset episodes, we encapsulate training and evaluation using `few_shot_runner.py`. You only need to specify the dataset and the number of episodes, then our launcher will take care of the rest. We provide an example which runs 600 few-shot episodes on `mscoco` dataset:
+Finally, to evaluate LAVA on FSL meta-dataset episodes, we encapsulate training and evaluation using `fewshot_runner.py`. You only need to specify the dataset and the number of episodes, then our runner code will take care of the rest. We provide an example which runs 600 few-shot episodes on `mscoco` dataset:
 ```
 ./scripts/lava_fsl_3_target_finetune_episodes.sh
 ```
 
 You can adjust the above script header to include any of the meta-datasets below and any number of episodes.
 
-We provide pretrained weights on ImageNet 716 classes and the language MLP module here.
-
-meta datasets: 'aircraft', 'cu_birds', 'dtd', 'fungi', 'ilsvrc_2012', 'omniglot', 'quickdraw', 'vgg_flower', 'traffic_sign', 'mscoco'
-
-
+`meta datasets: 'aircraft', 'cu_birds', 'dtd', 'fungi', 'ilsvrc_2012', 'omniglot', 'quickdraw', 'vgg_flower', 'traffic_sign', 'mscoco'`
 
 
 
@@ -138,3 +146,7 @@ If you find our work useful, please consider giving a star and citing our work u
   year={2022}
 }
 ```
+
+## Acknowledgement
+
+This repo is partially based on the [DINO github repo](https://github.com/facebookresearch/dino). 
