@@ -1,12 +1,13 @@
 num_gpus=2;
 data=/home/data/clipart_4shot/;
+model=/home/lava_output/clipart_self_finetuning_from_imagenet/checkpoint.pth;
 output=/home/lava_output/clipart_sup_finetuning_4shot;
 
 python -m torch.distributed.launch --nproc_per_node=${num_gpus} main_lava.py \
     --arch vit_small \
     --epochs 20 \
     --batch_size_per_gpu 128 \
-    --pretrained_weights /home/lava_output/clipart_self_finetuning_from_imagenet/checkpoint.pth \
+    --pretrained_weights ${model} \
     --load_backbone_only True \
     --data_path ${data} \
     --output_dir ${output} \

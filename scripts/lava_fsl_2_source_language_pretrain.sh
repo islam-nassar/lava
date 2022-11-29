@@ -1,12 +1,13 @@
 num_gpus=2;
-data=data=/home/data/imagenet_metadataset_train/;
+data=/home/data/imagenet_metadataset_train/;
+model=/home/lava_output/imagenet_metadataset_train_self_pretraining_vit_s_16/checkpoint.pth;
 output=/home/lava_output/imagenet_metadataset_train_language_pretraining_vit_s_16;
 
 python -m torch.distributed.launch --nproc_per_node=${num_gpus} main_lava.py \
     --arch vit_small \
     --epochs 20 \
     --batch_size_per_gpu 128 \
-    --pretrained_weights /home/lava_output/imagenet_metadataset_train_self_pretraining_vit_s_16/checkpoint.pth \
+    --pretrained_weights ${model} \
     --load_backbone_only true \
     --freeze_student_backbone true \
     --data_path ${data} \
