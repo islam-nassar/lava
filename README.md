@@ -82,7 +82,7 @@ In the second stage, LAVA fine-tune the source self-supervised pretrained model 
 ```
 You must edit the header of the above script to reflect the target dataset directory and the source pretrained weights. Refer to our example which uses imagenet source and domain_net clipart as target.
 
-### SSL training (stage 3 - target supervised fine-tuning)
+### SSL training (stage 3 - target semisupervised finetuning)
 Finally, in the third stage, LAVA fine-tunes the target self-supervised pretrained model to the labeled and unlabeled instances of the target dataset by employing supervised fine-tuning and multi-crop pseudo-labeling. You can achieve this by running:
 ```
 ./scripts/lava_ssl_3_target_semisup_finetune.sh
@@ -96,7 +96,7 @@ To evaluate LAVA, you can use eval_linear.py or eval_knn.py which is the standal
 Our FSL transfer learning procedure includes: 
 1) self-supervised pretraining on the source dataset (We use ImageNet train split from meta-dataset)
 2) Language module pretraining on the source dataset
-3) FSL episodes - semi-supervised fine-tuning on the support set and evaluation on query set.
+3) FSL episodes - semisupervised finetuning on the support set and evaluation on query set.
 
 First, we discuss how to prepare the meta-dataset then we detail how to run LAVA for each of the three stages.
 
@@ -120,7 +120,7 @@ Subsequently, you train the language adapter MLP while freezing LAVA's backbone 
 ./scripts/lava_fsl_2_source_language_pretrain.sh
 ```
 
-The pretrained model we used in all our FSL experiments can be found here. ([We provide pretrained weights on ImageNet 716 classes and the language MLP module]())
+The pretrained model we used in all our FSL experiments can be found here. ([pretrained weights on ImageNet 716 classes with language MLP]())
 
 ### FSL target training and evaluation (FSL episodes)
 Finally, to evaluate LAVA on FSL meta-dataset episodes, we encapsulate training and evaluation using `fewshot_runner.py`. You only need to specify the dataset and the number of episodes, then our runner code will take care of the rest. We provide an example which runs 600 few-shot episodes on `mscoco` dataset:
