@@ -73,7 +73,7 @@ Notes:
 - If you are to use a [pretrained DINO model](https://github.com/facebookresearch/dino#pretrained-models), make sure to use the full ckpt (full checkpoint) and not just the backbone because our method uses the head during target self-supervised fine-tuning.
 - You can pretrain your own DINO model using LAVA's repo by invoking the above script. You should edit the header of the script to reflect your source dataset (we use ImageNet but you can use any dataset of your choice as long as it is in the described format)
 
-The pretrained model we used in all our SSL experiments can be found here. ([]())
+The pretrained model we used in all our SSL experiments can be found here. ([lava_ssl_imagenet_vit_s_16](https://drive.google.com/file/d/1AiSYbKboq6RYrqB0LxjRIG4iK1yuV4aL/view?usp=sharing))
 
 ### SSL training (stage 2 - target self-supervised fine-tuning)
 In the second stage, LAVA fine-tune the source self-supervised pretrained model to the unlabeled instances of the target dataset. You can achieve this by running:
@@ -120,7 +120,7 @@ Subsequently, you train the language adapter MLP while freezing LAVA's backbone 
 ./scripts/lava_fsl_2_source_language_pretrain.sh
 ```
 
-The pretrained model we used in all our FSL experiments can be found here. ([pretrained weights on ImageNet 716 classes with language MLP]())
+The pretrained model we used in all our FSL experiments can be found here. ([pretrained weights on ImageNet 716 classes with language MLP](https://drive.google.com/file/d/1GvGNLe0vO7fYn6EcxK7lOjYORaKa29G7/view?usp=sharing))
 
 ### FSL target training and evaluation (FSL episodes)
 Finally, to evaluate LAVA on FSL meta-dataset episodes, we encapsulate training and evaluation using `fewshot_runner.py`. You only need to specify the dataset and the number of episodes, then our runner code will take care of the rest. We provide an example which runs 600 few-shot episodes on `mscoco` dataset:
