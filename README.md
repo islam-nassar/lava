@@ -139,11 +139,12 @@ You can adjust the above script header to include any of the meta-datasets below
 If you find our work useful, please consider giving a star and citing our work using below:
 
 ```
-@article{nassar2022lava,
+@inproceedings{nassar2023lava,
   title={LAVA: Label-efficient Visual Learning and Adaptation},
   author={Nassar, Islam and Hayat, Munawar and Abbasnejad, Ehsan and Rezatofighi, Hamid and Harandi, Mehrtash and Haffari, Gholamreza},
-  journal={arXiv preprint arXiv:2210.10317},
-  year={2022}
+  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
+  pages={147--156},
+  year={2023}
 }
 ```
 
